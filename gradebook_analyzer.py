@@ -61,9 +61,26 @@ print("=== Bottom 3 (May Need Extra Support) ===")
 print(bottom_3[["Student_Name", "Average"]])
 print()
 
-# 7. Class average across all assignments
-class_average = df[assignment_cols].values.mean()
-print(f"Overall class average across all assignments: {class_average:.2f}")
+# 7. NumPy section
+# Pulling the raw scores out as a NumPy array so I can use NumPy functions
+# directly instead of going through Pandas for everything. Also using this
+# to calculate standard deviation, which tells us how spread out the scores
+# are for each assignment (Pandas can do this too, but I wanted an actual
+# reason to use NumPy here instead of just importing it for no reason).
+scores_array = df[assignment_cols].to_numpy()
+
+class_average_np = np.mean(scores_array)
+class_std_np = np.std(scores_array)
+print(f"Overall class average (via NumPy): {class_average_np:.2f}")
+print(f"Overall class standard deviation (via NumPy): {class_std_np:.2f}")
+print()
+
+# Standard deviation per assignment - higher std means scores were more
+# spread out (some students did way better/worse than others on that one)
+assignment_std = np.std(scores_array, axis=0)
+print("=== Standard Deviation Per Assignment ===")
+for col_name, std_val in zip(assignment_cols, assignment_std):
+    print(f"{col_name}: {std_val:.2f}")
 print()
 
 # 8. Saving the results
@@ -79,7 +96,10 @@ print("Saved to gradebook_with_stats.csv")
 #   lowest (77.0)
 # - Overall class average across all assignments and students comes out to
 #   be in the high 70s
+# - Assignment_1 has the highest standard deviation, meaning scores were
+#   more spread out on that one compared to the others
 #
 # This was a good way to practice basic Pandas operations like mean(),
 # median(), row-wise vs column-wise aggregation with axis, and sorting
-# with sort_values().
+# with sort_values(). Also got to actually use NumPy for something real
+# (std deviation) instead of just importing it and not touching it.
